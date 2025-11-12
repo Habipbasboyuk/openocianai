@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1076762516853",
-    "project_id": "agentic-ocean-explorer",
-    "storage_bucket": "agentic-ocean-explorer.firebasestorage.app"
+    "project_number": "505807556831",
+    "project_id": "cooked-coders-ai",
+    "storage_bucket": "cooked-coders-ai.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1076762516853:android:f844a7bcc5c989982dc73c",
+        "mobilesdk_app_id": "1:505807556831:android:801b094396f4a604fcd96a",
         "android_client_info": {
           "package_name": "com.example.hack_the_future_starter"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDQ44WLOfCwVksmDIQkrK4lgQIlvMypJCI"
+          "current_key": "AIzaSyD5X5HGrFHdget1N7phF2vh6b11dfQYUTk"
         }
       ],
       "services": {

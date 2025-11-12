@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDxw5N7cMUxW9S2kB0mAXP-3OsXt2Ml3VA</string>
+	<string>AIzaSyD3BzVx-zBF5YdQT36w5rlU52ZrR5UIy5A</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1076762516853</string>
+	<string>505807556831</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.hackTheFutureStarter</string>
 	<key>PROJECT_ID</key>
-	<string>agentic-ocean-explorer</string>
+	<string>cooked-coders-ai</string>
 	<key>STORAGE_BUCKET</key>
-	<string>agentic-ocean-explorer.firebasestorage.app</string>
+	<string>cooked-coders-ai.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1076762516853:ios:7731c9694e4f5bc42dc73c</string>
+	<string>1:505807556831:ios:384cdf1f015c4d3ffcd96a</string>
 </dict>
 </plist>
