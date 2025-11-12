@@ -1,6 +1,7 @@
 import 'package:genui/genui.dart';
 import 'package:genui_firebase_ai/genui_firebase_ai.dart';
 import 'package:hack_the_future_starter/features/chat/widgets/ocean_line_chart.dart';
+import 'package:hack_the_future_starter/features/chat/widgets/ocean_pie_chart.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 import 'package:logging/logging.dart';
 
@@ -8,7 +9,9 @@ class GenUiService {
   static final _log = Logger('GenUiService');
 
   Catalog createCatalog() {
-    _log.info('Creating catalog with OceanLineChart component');
+    _log.info(
+      'Creating catalog with OceanLineChart and OceanPieChart components',
+    );
     return Catalog([
       ...CoreCatalogItems.asCatalog().items,
       CatalogItem(
@@ -40,6 +43,33 @@ class GenUiService {
                 .cast<Map<String, dynamic>>(),
             xLabel: data['xLabel'] as String? ?? 'Time',
             yLabel: data['yLabel'] as String? ?? 'Value',
+          );
+        },
+      ),
+      CatalogItem(
+        name: 'OceanPieChart',
+        dataSchema: S.object(
+          properties: {
+            'title': S.string(description: 'Chart title'),
+            'data': S.list(
+              description: 'Array of items with label and numeric value',
+              items: S.object(
+                properties: {
+                  'label': S.string(description: 'Label for the slice'),
+                  'value': S.number(description: 'Numeric value for the slice'),
+                },
+                required: ['value'],
+              ),
+            ),
+          },
+          required: ['title', 'data'],
+        ),
+        widgetBuilder: (context) {
+          final data = context.data as Map<String, dynamic>;
+          _log.info('Building OceanPieChart with data: $data');
+          return OceanPieChart(
+            title: data['title'] as String,
+            data: (data['data'] as List).cast<Map<String, dynamic>>(),
           );
         },
       ),
@@ -122,6 +152,32 @@ Use this component to display ocean data trends over time as a line chart.
 - User asks for trends over time
 - User wants to see temperature/salinity/wave height changes
 - User asks to "visualize", "show graph", "plot", or "chart"
+
+### OceanPieChart
+Use this component to display a distribution or composition as a pie chart.
+
+**Parameters:**
+- `title` (required): string - Chart title
+- `data` (required): array of objects - Items to show in the pie
+  - Each object should have: `label` (string), `value` (number)
+
+**Example Usage:**
+```json
+{
+  "OceanPieChart": {
+    "title": "Salinity Composition",
+    "data": [
+      {"label": "Chloride", "value": 55.0},
+      {"label": "Sodium", "value": 30.0},
+      {"label": "Other", "value": 15.0}
+    ]
+  }
+}
+```
+
+**When to use OceanPieChart:**
+- User asks for composition, distribution or parts-of-a-whole (e.g., species share, composition of salts)
+- User asks for percentages or breakdowns rather than time-series
 
 ## Visualizing Data with Charts
 

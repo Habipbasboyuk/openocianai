@@ -4,6 +4,7 @@ import 'package:genui/genui.dart';
 import 'package:hack_the_future_starter/features/chat/models/chat_message.dart';
 import 'package:hack_the_future_starter/features/chat/services/genui_service.dart';
 import 'package:hack_the_future_starter/features/chat/services/dummy_ocean_responses.dart';
+import 'package:hack_the_future_starter/features/chat/services/chat_history_service.dart';
 import 'package:logging/logging.dart';
 
 class ChatViewModel extends ChangeNotifier {
@@ -185,6 +186,82 @@ class ChatViewModel extends ChangeNotifier {
     notifyListeners();
 
     _log.info('Conversation reset complete - ready for new requests');
+  }
+
+  Future<void> saveCurrentChat() async {
+    if (_messages.isEmpty) {
+      _log.info('No messages to save');
+      return;
+    }
+
+    // Filter debug messages eruit.
+    // Include UI-surface messages (m.text == null) as they represent generated components
+    // and should be saved as '[UI Component]'. Also exclude short debug-only messages.
+    final realMessages = _messages.where((m) {
+      if (m.text == null) return true; // UI component
+      final text = m.text!.trim();
+      if (text.isEmpty) return false;
+      // Exclude short debug markers that start with specific emojis
+      final isDebugMarker =
+          text.length < 40 &&
+          (text.startsWith('🚀') ||
+              text.startsWith('✅') ||
+              text.startsWith('⚠️') ||
+              text.startsWith('❌') ||
+              text.startsWith('🤖'));
+      return !isDebugMarker;
+    }).toList();
+
+    if (realMessages.isEmpty) {
+      _log.info('No real messages to save');
+      return;
+    }
+
+    // Maak titel van eerste user message
+    final firstUserMsg = realMessages.firstWhere(
+      (m) => m.isUser && m.text != null,
+      orElse: () => realMessages.first,
+    );
+
+    String title = firstUserMsg.text ?? 'Ocean Chat';
+    if (title.length > 50) {
+      title = '${title.substring(0, 47)}...';
+    }
+
+    // Converteer messages naar strings
+    final messageStrings = realMessages.map((m) {
+      final prefix = m.isUser ? 'User: ' : 'AI: ';
+      return '$prefix${m.text ?? '[UI Component]'}';
+    }).toList();
+
+    final service = ChatHistoryService();
+    try {
+      // ignore: avoid_print
+      print('[ChatViewModel] Saving chat: $title');
+      await service.saveChat(title: title, messages: messageStrings);
+      _log.info('Chat saved: $title');
+      _addDebugMessage('💾 Chat opgeslagen');
+      // ignore: avoid_print
+      print('[ChatViewModel] Save completed for: $title');
+    } catch (e) {
+      _log.severe('Failed to save chat: $e');
+      _addDebugMessage('⚠️ Kon chat niet opslaan');
+      // rethrow to allow UI to show error if desired
+      rethrow;
+    }
+  }
+
+  void clearCurrentChat() {
+    _messages.clear();
+    _currentRequestId++;
+
+    // Reset conversation
+    final oldConversation = _conversation;
+    _createConversation();
+    oldConversation.dispose();
+
+    notifyListeners();
+    _log.info('Chat cleared');
   }
 
   void disposeConversation() {
